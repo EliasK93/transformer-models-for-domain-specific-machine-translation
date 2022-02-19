@@ -1,11 +1,11 @@
 ## Transformer Models for Domain-Specific Machine Translation
 
-Examplary application for the task of fine-tuning pretrained machine translation models on highly domain-specific 
+Example application for the task of fine-tuning pretrained machine translation models on highly domain-specific 
 translated sentences. 
 
 For this, likely translation pairs are first extracted from the original versions and the German book translations of the 
 _Harry Potter_ fantasy novel series using a _Translated Sentence Mining_ approach. The extracted sentence translations are then used to fine-tune two baseline 
-machine translation models (pre-trained model **MarianMT** for translation from English to German and Google's **T5**).
+machine translation models (pre-trained model **MarianMT** for translation from English to German and Google's *Text-To-Text Transfer Transformer* **T5**).
 
 Afterwards, some metrics are calculated to evaluate the performance boost from fine-tuning the models. 
 
@@ -29,9 +29,17 @@ Afterwards, some metrics are calculated to evaluate the performance boost from f
 
 ##### III. Machine Translation Quality Evaluation
 
-1. Use the non-fine-tuned _MarianMT_ and _T5_ models to get machine translations for the test set
-2. Use the fine-tuned models to get machine translations for the test set
+1. Use the non-fine-tuned _MarianMT_ and _T5_ models to get machine translations for a sample from the test set
+2. Use the fine-tuned models to get machine translations for a sample from the test set
 3. Calculate [BLEU](https://github.com/mjpost/sacrebleu), [METEOR](https://github.com/nltk/nltk/blob/develop/nltk/translate/meteor_score.py) and [BertScore](https://github.com/Tiiiger/bert_score) between references and the target language translations for each the non-fine-tuned and the fine-tuned models
+
+<br>
+
+### Visualization of the procedure
+
+<br>
+
+<kbd>![](imgs/procedure.png)</kbd>
 
 <br>
 
