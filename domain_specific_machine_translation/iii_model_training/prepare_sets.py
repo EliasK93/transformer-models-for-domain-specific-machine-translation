@@ -1,6 +1,6 @@
 import random
 from typing import Tuple
-import file_utils
+from domain_specific_machine_translation import file_utils
 
 
 def split_dict(dict_: dict, splits: Tuple[float, float, float], seed: int = 1):

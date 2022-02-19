@@ -1,4 +1,4 @@
-from ii_sentence_mining.parallel_sentence_miner import ParallelSentenceMiner
+from domain_specific_machine_translation.ii_sentence_mining.parallel_sentence_miner import ParallelSentenceMiner
 
 
 if __name__ == '__main__':

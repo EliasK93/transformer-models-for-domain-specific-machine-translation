@@ -4,7 +4,7 @@ import bert_score
 import pandas
 import nltk
 import datasets
-import file_utils
+from domain_specific_machine_translation import file_utils
 
 
 def calc_meteor_avg(predictions_: List[str], references_: List[List[str]]) -> float:

@@ -1,6 +1,6 @@
 import random
 from typing import List, Tuple
-import model_utils
+from domain_specific_machine_translation import model_utils
 
 
 def sample_sentence_pairs(sample_size: int, sample_seed: int) -> Tuple[List[str], List[str]]:

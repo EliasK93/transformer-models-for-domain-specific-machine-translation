@@ -5,7 +5,7 @@ from datasets import load_dataset, load_metric
 import datasets
 import numpy as np
 from transformers import Seq2SeqTrainingArguments, DataCollatorForSeq2Seq, Seq2SeqTrainer
-import model_utils
+from domain_specific_machine_translation import model_utils
 
 
 metric_sacrebleu = load_metric("sacrebleu")
