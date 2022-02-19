@@ -81,6 +81,7 @@ Afterwards, some metrics are calculated to evaluate the performance boost from f
 
 <br>
 
-### Note
+### Notes
 
 All files in this repository which contain text from the books are cut off after the first 50 rows.
+The trained model files `pytorch_model.bin` and `optimizer.pt` for each model are omitted in this repository.
