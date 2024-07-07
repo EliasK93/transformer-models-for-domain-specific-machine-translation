@@ -4,12 +4,22 @@ Example application for the task of fine-tuning pretrained machine translation m
 translated sentences. 
 
 For this, likely translation pairs are first extracted from the original versions and the German book translations of the 
-_Harry Potter_ fantasy novel series using a _Translated Sentence Mining_ approach. The extracted sentence translations are then used to fine-tune two baseline 
-machine translation models (pre-trained model **MarianMT** for translation from English to German and Google's *Text-To-Text Transfer Transformer* **T5**).
+_Harry Potter_ fantasy novel series using a _Translated Sentence Mining_ approach. The extracted sentence translations are then used to fine-tune three baseline 
+machine translation models (pre-trained model **MarianMT** for translation from English to German, Google's *Text-To-Text Transfer Transformer* **T5** and Meta AI's *No Language Left Behind* machine translation model **NLLB-200** in its distilled 600M variant).
 
 Afterwards, some metrics are calculated to evaluate the performance boost from fine-tuning the models. 
 
 <br>
+
+
+### Visualization of the procedure
+
+<br>
+
+<kbd>![](imgs/procedure.svg)</kbd>
+
+<br>
+
 
 ### Overview of the procedure
 
@@ -24,33 +34,27 @@ Afterwards, some metrics are calculated to evaluate the performance boost from f
 
 ##### II. Machine Translation Engine Training on Domain-Specific Corpus
 
-1. Load the pre-trained models [`Helsinki-NLP/opus-mt-en-de`](https://github.com/Helsinki-NLP/Opus-MT) (MarianMTModel) and [`t5-base`](https://github.com/google-research/text-to-text-transfer-transformer) (T5ForConditionalGeneration) in [huggingface](https://huggingface.co/)
-2. Fine-tune the models on the extracted parallel sentences using the train and evaluation set for 10 epochs each (training time: 03h-04m-45s for _MarianMT_ and 09h-20m-10s for _T5_ on NVIDIA GeForce GTX 1660 Ti)
+1. Load the pre-trained models [`Helsinki-NLP/opus-mt-en-de`](https://github.com/Helsinki-NLP/Opus-MT) (MariantMT), [`t5-large`](https://github.com/google-research/text-to-text-transfer-transformer) (T5) and [`facebook/nllb-200-distilled-600M`](https://arxiv.org/abs/2207.04672) (NLLB-200) in [huggingface](https://huggingface.co/)
+2. Fine-tune the models on the extracted parallel sentences using the train and evaluation set for 10 epochs each
 
 ##### III. Machine Translation Quality Evaluation
 
-1. Use the non-fine-tuned _MarianMT_ and _T5_ models to get machine translations for a sample from the test set
+1. Use the non-fine-tuned _MarianMT_, _T5_ and _NLLB-200_ models to get machine translations for a sample from the test set
 2. Use the fine-tuned models to get machine translations for a sample from the test set
 3. Calculate [BLEU](https://github.com/mjpost/sacrebleu), [METEOR](https://github.com/nltk/nltk/blob/develop/nltk/translate/meteor_score.py) and [BertScore](https://github.com/Tiiiger/bert_score) between references and the target language translations for each the non-fine-tuned and the fine-tuned models
 
 <br>
 
-### Visualization of the procedure
-
-<br>
-
-<kbd>![](imgs/procedure.png)</kbd>
-
-<br>
-
 ### Results
 
-|               Model               |  BLEU  | METEOR | BertScore<sup>1</sup> |
-|:---------------------------------:|:------:|:------:|:---------------------:|
-|  MarianMT (baseline)              | 0.256  | 0.433  |  0.597                |
-|  MarianMT (fine-tuned)            | 0.388  | 0.552  |  0.717                |
-|  T5-base (baseline)               | 0.166  | 0.307  |  0.309                |
-|  T5-base (fine-tuned)             | 0.340  | 0.492  |  0.662                |
+|         Model         | BLEU  | METEOR | BertScore<sup>1</sup> |
+|:---------------------:|:-----:|:------:|:---------------------:|
+|  MarianMT (baseline)  | 0.249 | 0.421  |         0.596         |
+| MarianMT (fine-tuned) | 0.379 | 0.541  |         0.709         |
+|  T5 (baseline)        | 0.173 | 0.297  |         0.446         |
+|  T5 (fine-tuned)      | 0.367 | 0.521  |         0.690         |
+|  NLLB-200 (baseline)  | 0.244 | 0.411  |         0.595         |
+| NLLB-200 (fine-tuned) | 0.367 | 0.531  |         0.703         |
 
 <sup>1</sup>: setting the parameter `rescale_with_baseline` to `True`
 
@@ -58,11 +62,11 @@ Afterwards, some metrics are calculated to evaluate the performance boost from f
 
 ### Requirements
 
-##### - Python >= 3.8
+##### - Python >= 3.10
 
 ##### - Conda
-  - `pytorch==1.7.1`
-  - `cudatoolkit=10.1`
+  - `pytorch==2.3.1`
+  - `cudatoolkit=12.1`
   - `pywin32`
 
 ##### - pip
@@ -78,10 +82,13 @@ Afterwards, some metrics are calculated to evaluate the performance boost from f
   - `python-dateutil`
   - `numpy`
   - `openpyxl`
+  - `sentencepiece`
+  - `sacremoses`
+  - `nltk`
 
 <br>
 
 ### Notes
 
 All files in this repository which contain text from the books are cut off after the first 50 rows.
-The trained model files `pytorch_model.bin` and `optimizer.pt` for each model are omitted in this repository.
+The trained model files `model.safetensors` and `optimizer.pt` for each model are omitted in this repository.

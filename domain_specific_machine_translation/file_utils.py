@@ -1,8 +1,7 @@
 import json
-from typing import List, Dict
 
 
-def read_txt(path: str) -> List[str]:
+def read_txt(path: str) -> list[str]:
     """
     Reads txt file and returns it as list of strings, one string per line.
 
@@ -13,7 +12,7 @@ def read_txt(path: str) -> List[str]:
         return [line.rstrip() for line in f.readlines()]
 
 
-def write_txt(lines: List[str], path: str):
+def write_txt(lines: list[str], path: str):
     """
     Writes a list of strings and write it to a txt file, one string per line.
 
@@ -25,7 +24,7 @@ def write_txt(lines: List[str], path: str):
             f.write(line+"\n")
 
 
-def write_jsonl(dict_: Dict, path: str):
+def write_jsonl(dict_: dict, path: str):
     """
     Writes a dicts values to JSONL format file, ignoring the keys.
 

@@ -1,5 +1,4 @@
 from statistics import mean
-from typing import List
 import bert_score
 import pandas
 import nltk
@@ -7,7 +6,7 @@ import datasets
 from domain_specific_machine_translation import file_utils
 
 
-def calc_meteor_avg(predictions_: List[str], references_: List[List[str]]) -> float:
+def calc_meteor_avg(predictions_: list[str], references_: list[list[str]]) -> float:
     """
     Calculates the average METEOR score between model translations and reference translations.
 
@@ -20,7 +19,7 @@ def calc_meteor_avg(predictions_: List[str], references_: List[List[str]]) -> fl
     return mean(scores)
 
 
-def calc_bleu(predictions_: List[str], references_: List[List[str]]) -> float:
+def calc_bleu(predictions_: list[str], references_: list[list[str]]) -> float:
     """
     Calculates the corpus level BLEU score between model translations and reference translations.
 
@@ -31,7 +30,7 @@ def calc_bleu(predictions_: List[str], references_: List[List[str]]) -> float:
     return metric_sacrebleu.compute(predictions=predictions_, references=references_)["score"] / 100
 
 
-def calc_bert_score(predictions_: List[str], references_: List[List[str]], lang: str) -> float:
+def calc_bert_score(predictions_: list[str], references_: list[list[str]], lang: str) -> float:
     """
     Calculates the average BertScore between model translations and reference translations.
 
@@ -45,7 +44,9 @@ def calc_bert_score(predictions_: List[str], references_: List[List[str]], lang:
 
 if __name__ == '__main__':
 
+    # load metrics
     metric_sacrebleu = datasets.load_metric("sacrebleu")
+    nltk.download('wordnet')
 
     # create dictionaries to put scores in
     scores_dict = {}
@@ -55,8 +56,9 @@ if __name__ == '__main__':
     sources = [s for s in file_utils.read_txt("../iv_prediction/sources.txt")]
 
     # calculate scores and put result in nested dict
-    for model in ["opus-mt-en-de", "opus-mt-en-de_finetuned", "t5-base", "t5-base_finetuned"]:
-        preds = file_utils.read_txt(f"../iv_prediction/targets_{model}.txt")
+    for model in ["opus-mt-en-de", "opus-mt-en-de_finetuned", "t5-large", "t5-large_finetuned",
+                  "facebook/nllb-200-distilled-600M", "facebook/nllb-200-distilled-600M_finetuned"]:
+        preds = file_utils.read_txt(f"../iv_prediction/targets_" + model.split("/")[-1] + ".txt")
         scores_dict[model] = {}
         scores_dict[model]["sacrebleu"] = calc_bleu(preds, references)
         scores_dict[model]["meteor"] = calc_meteor_avg(preds, references)

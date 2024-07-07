@@ -1,9 +1,8 @@
 import random
-from typing import Tuple
 from domain_specific_machine_translation import file_utils
 
 
-def split_dict(dict_: dict, splits: Tuple[float, float, float], seed: int = 1):
+def split_dict(dict_: dict, splits: tuple[float, float, float], seed: int = 1):
     """
     Helper method to split dictionary to train, val and test set.
 

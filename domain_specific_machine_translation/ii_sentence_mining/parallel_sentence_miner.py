@@ -8,7 +8,6 @@ import faiss
 from sentence_transformers import SentenceTransformer
 import numpy
 from lingtrain_aligner import preprocessor, splitter
-from typing import List
 
 
 class ParallelSentenceMiner:
@@ -33,7 +32,7 @@ class ParallelSentenceMiner:
             sents_en = self.split_by_sentences_(f.readlines(), self.trg_lang)
         self.add_pairs_knn(sents_src=sents_de, sents_trg=sents_en)
 
-    def add_pairs_knn(self, sents_src: List[str], sents_trg: List[str]):
+    def add_pairs_knn(self, sents_src: list[str], sents_trg: list[str]):
         """
         Finds bilingual sentence pairs which maximize their similarity by first encoding them,
         using k-nearest neighbors to match and score them and then filtering pairs by a minimum score.
@@ -49,7 +48,7 @@ class ParallelSentenceMiner:
         self.add_to_pairs_dict(indices, scores, sents_src, sents_trg)
 
     def add_to_pairs_dict(self, indices: numpy.ndarray, scores: numpy.ndarray,
-                          sents_src: List[str], sents_trg: List[str],
+                          sents_src: list[str], sents_trg: list[str],
                           min_score: float = 1.1, min_length: int = 20, max_length: int = 200):
         """
         Uses the indices and scores arrays to build a dictionary of the sentence pairs which have a score of

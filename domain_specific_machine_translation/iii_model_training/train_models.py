@@ -8,7 +8,7 @@ from transformers import Seq2SeqTrainingArguments, DataCollatorForSeq2Seq, Seq2S
 from domain_specific_machine_translation import model_utils
 
 
-metric_sacrebleu = load_metric("sacrebleu")
+metric_sacrebleu = load_metric("sacrebleu", trust_remote_code=True)
 
 
 def load_raw_datasets() -> datasets.DatasetDict:
@@ -86,7 +86,7 @@ if __name__ == '__main__':
     # LOAD DATASET
     raw_datasets = load_raw_datasets()
 
-    for model_type in ["Helsinki-NLP/opus-mt-en-de", "t5-base"]:
+    for model_type in ["Helsinki-NLP/opus-mt-en-de", "t5-large", "facebook/nllb-200-distilled-600M"]:
 
         # LOAD MODEL
         tokenizer, model = model_utils.load_model(model_type=model_type, local=False)
