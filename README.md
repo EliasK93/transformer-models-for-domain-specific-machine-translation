@@ -16,7 +16,7 @@ Afterwards, some metrics are calculated to evaluate the performance boost from f
 
 <br>
 
-<kbd>![](imgs/procedure.svg)</kbd>
+<kbd>![](imgs/procedure_overview.svg)</kbd>
 
 <br>
 
