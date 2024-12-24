@@ -4,7 +4,7 @@ from domain_specific_machine_translation import file_utils
 
 def split_dict(dict_: dict, splits: tuple[float, float, float], seed: int = 1):
     """
-    Helper method to split dictionary to train, val and test set.
+    Split a dictionary into train, val and test set.
 
     :param dict_: dictionary to split
     :param splits: tuple for train_share, val_share and test_share where each is between 0 and 1 and the sum is 1
@@ -31,7 +31,7 @@ def split_dict(dict_: dict, splits: tuple[float, float, float], seed: int = 1):
 
 def create_pairs_dict_from_txt(src_lang: str, trg_lang: str):
     """
-    Reads the aligned source and target txt files and returns them in a dict.
+    Read the aligned source and target txt files and return them in a dict.
 
     :param src_lang: source language (ISO-639-1)
     :param trg_lang: target language (ISO-639-1)

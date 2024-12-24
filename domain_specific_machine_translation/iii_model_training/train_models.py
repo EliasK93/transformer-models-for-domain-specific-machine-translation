@@ -8,12 +8,9 @@ from transformers import Seq2SeqTrainingArguments, DataCollatorForSeq2Seq, Seq2S
 from domain_specific_machine_translation import model_utils
 
 
-metric_sacrebleu = load_metric("sacrebleu", trust_remote_code=True)
-
-
 def load_raw_datasets() -> datasets.DatasetDict:
     """
-    Loads train, validation and test set from local JSONL files and wraps them in a DatasetDict.
+    Load train, validation and test set from local JSONL files and wraps them in a DatasetDict.
 
     :return: DatasetDict containing the sets
     """
@@ -47,7 +44,7 @@ def postprocess_text(preds, labels):
     return preds, labels
 
 
-def compute_metrics(eval_preds, metric=metric_sacrebleu):
+def compute_metrics(eval_preds):
     """
     See https://github.com/sravan1320/NMT/blob/main/fine_tune_hugging_face_translation_model.ipynb
     """
@@ -70,38 +67,39 @@ def compute_metrics(eval_preds, metric=metric_sacrebleu):
 
 def preprocess_datasets(raw_datasets_: datasets.DatasetDict, model_type_: str):
     """
-    Applies the preprocess function to a DatasetDict and returns a DatasetDict containing
-    the preprocessed and tokenized sets.
+    Apply the preprocess function to a DatasetDict and return a DatasetDict containing the preprocessed
+    and tokenized sets.
 
     :param raw_datasets_: DatasetDict of the raw sets
     :param model_type_: name of the model (model_id in huggingface)
     :return: DatasetDict containing the preprocessed and tokenized sets
     """
-    return raw_datasets_.map(preprocess_function, batched=True,
-                             fn_kwargs={"prefix": model_utils.prefixes[model_type_]})
+    return raw_datasets_.map(preprocess_function, batched=True, fn_kwargs={"prefix": model_utils.prefixes[model_type_]})
 
 
 if __name__ == '__main__':
 
-    # LOAD DATASET
+    # load dataset
     raw_datasets = load_raw_datasets()
 
-    for model_type in ["Helsinki-NLP/opus-mt-en-de", "t5-large", "facebook/nllb-200-distilled-600M"]:
+    # load metric
+    metric = load_metric("sacrebleu", trust_remote_code=True)
 
-        # LOAD MODEL
+    for model_type in ["Helsinki-NLP/opus-mt-en-de", "t5-base", "facebook/nllb-200-distilled-600M"]:
+
+        # load model
         tokenizer, model = model_utils.load_model(model_type=model_type, local=False)
 
-        # PREPROCESS
+        # preprocess
         tokenized_datasets = preprocess_datasets(raw_datasets, model_type_=model_type)
 
-        # TRAIN
+        # train
         output_dir = model_utils.model_dirs[model_type]
         args = Seq2SeqTrainingArguments(
             output_dir=output_dir, overwrite_output_dir=False, seed=1, num_train_epochs=10, learning_rate=2e-5,
             weight_decay=0.01, save_total_limit=2, per_device_train_batch_size=model_utils.batch_sizes[model_type],
             per_device_eval_batch_size=model_utils.batch_sizes[model_type], predict_with_generate=True,
-            evaluation_strategy="epoch", save_strategy="epoch"
-        )
+            evaluation_strategy="epoch", save_strategy="epoch")
         data_collator = DataCollatorForSeq2Seq(tokenizer, model=model)
         trainer = Seq2SeqTrainer(model, args, tokenizer=tokenizer, train_dataset=tokenized_datasets["train"],
                                  eval_dataset=tokenized_datasets["validation"], data_collator=data_collator,
